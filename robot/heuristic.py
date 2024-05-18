@@ -25,7 +25,7 @@ def get_heuristic(board):
                 else:
                     add_by_color(values, color, y)
 
-    return values["blue"] - values["red"]
+    return values["red"] - values["blue"]
 
 
 def add_by_color(dict, color, value):

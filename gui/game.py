@@ -5,7 +5,7 @@ import sys
 from gui.board import Board
 from gui.graphics import Graphics
 from gui.consts import Colors
-from robot.heuristic import get_heuristic
+from robot.robot import Robot
 
 pygame.font.init()
 
@@ -18,7 +18,7 @@ class Game:
     def __init__(self):
         self.graphics = Graphics()
         self.board = Board()
-
+        self.robot = Robot()
         self.turn = Colors.BLUE.value
         self.selected_piece = None  # a board location.
         self.hop = False
@@ -42,7 +42,12 @@ class Game:
         (like a mouse click) and then effect the game state.
         """
 
-        self.mouse_pos = self.graphics.board_coords(
+        if self.turn == Colors.RED.value:  ### robots turn
+            self.board = self.robot.move(self.board)
+            self.end_turn()
+            return
+
+        self.mouse_pos = self.graphics.board_coords(  ### [x,y] of the matrix
             pygame.mouse.get_pos()
         )  # what square is the mouse in?
         if self.selected_piece is not None:
@@ -56,14 +61,14 @@ class Game:
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.hop is False:
-                    if (
+                    if (  ### click on the checker to move
                         self.board.location(self.mouse_pos).occupant is not None
                         and self.board.location(self.mouse_pos).occupant.color
                         == self.turn
-                    ):  # picked your checker
+                    ):
                         self.selected_piece = self.mouse_pos
 
-                    elif (
+                    elif (  ### click on the place you want to move
                         self.selected_piece is not None
                         and self.mouse_pos
                         in self.board.legal_moves(self.selected_piece)
@@ -79,7 +84,6 @@ class Game:
                                     (self.selected_piece[1] + self.mouse_pos[1]) >> 1,
                                 )
                             )
-
                             self.hop = True
                             self.selected_piece = self.mouse_pos
 
@@ -105,7 +109,6 @@ class Game:
 
                     else:
                         self.selected_piece = self.mouse_pos
-                print(get_heuristic(self.board))
 
     def update(self):
         """Calls on the graphics class to update the game display."""
