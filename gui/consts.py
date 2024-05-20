@@ -11,6 +11,12 @@ class Colors(Enum):
     HIGH = (160, 190, 255)
 
 
+class Models(Enum):
+    BLUE = [-1, -2]
+    RED = [1, 2]
+    KING = [-2, 2]
+
+
 class Directions(Enum):
     NORTHWEST = "northwest"
     NORTHEAST = "northeast"

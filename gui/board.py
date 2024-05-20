@@ -1,6 +1,4 @@
-from gui.consts import Colors, Directions
-from gui.square import Square
-from gui.piece import Piece
+from gui.consts import Colors, Directions, Models
 
 
 class Board:
@@ -16,22 +14,15 @@ class Board:
 
         matrix = [[None] * 8 for i in range(8)]
 
-        for x in range(8):
-            for y in range(8):
-                if (x + y) % 2 != 0:
-                    matrix[x][y] = Square(Colors.WHITE.value)
-                else:
-                    matrix[x][y] = Square(Colors.BLACK.value)
-
         # initialize the pieces and put them in the appropriate squares
 
         for x in range(8):
             for y in range(3):
-                if matrix[x][y].color == Colors.BLACK.value:
-                    matrix[x][y].occupant = Piece(Colors.RED.value)
+                if (x + y) % 2 == 0:
+                    matrix[x][y] = 1
             for y in range(5, 8):
-                if matrix[x][y].color == Colors.BLACK.value:
-                    matrix[x][y].occupant = Piece(Colors.BLUE.value)
+                if (x + y) % 2 == 0:
+                    matrix[x][y] = -1
 
         return matrix
 
@@ -85,10 +76,10 @@ class Board:
 
         x = pixel[0]
         y = pixel[1]
-        if self.matrix[x][y].occupant is not None:
+        if self.matrix[x][y] is not None:
             if (
-                self.matrix[x][y].occupant.king is False
-                and self.matrix[x][y].occupant.color is Colors.BLUE.value
+                self.matrix[x][y] not in Models.KING.value
+                and self.matrix[x][y] in Models.BLUE.value
             ):
                 blind_legal_moves = [
                     self.rel(Directions.NORTHWEST.value, (x, y)),
@@ -96,8 +87,8 @@ class Board:
                 ]
 
             elif (
-                self.matrix[x][y].occupant.king is False
-                and self.matrix[x][y].occupant.color is Colors.RED.value
+                self.matrix[x][y] not in Models.KING.value
+                and self.matrix[x][y] in Models.RED.value
             ):
                 blind_legal_moves = [
                     self.rel(Directions.SOUTHWEST.value, (x, y)),
@@ -131,17 +122,17 @@ class Board:
         if hop is False:
             for move in blind_legal_moves:
                 if self.on_board(move):
-                    if self.location(move).occupant is None:
+                    if self.location(move) is None:
                         legal_moves.append(move)
                     elif (
-                        self.location(move).occupant.color
-                        is not self.location((x, y)).occupant.color
+                        self.location(move) * self.location((x, y))
+                        < 0  ### are they not the same color
                         and self.on_board(
                             (move[0] + (move[0] - x), move[1] + (move[1] - y))
                         )
                         and self.location(
                             (move[0] + (move[0] - x), move[1] + (move[1] - y))
-                        ).occupant
+                        )
                         is None
                     ):  # is this location filled by an enemy piece?
                         legal_moves.append(
@@ -150,16 +141,16 @@ class Board:
 
         else:  # hop == True
             for move in blind_legal_moves:
-                if self.on_board(move) and self.location(move).occupant is not None:
+                if self.on_board(move) and self.location(move) is not None:
                     if (
-                        self.location(move).occupant.color
-                        != self.location((x, y)).occupant.color
+                        self.location(move) * self.location((x, y))
+                        < 0  ### are they not the same color
                         and self.on_board(
                             (move[0] + (move[0] - x), move[1] + (move[1] - y))
                         )
                         and self.location(
                             (move[0] + (move[0] - x), move[1] + (move[1] - y))
-                        ).occupant
+                        )
                         is None
                     ):  # is this location filled by an enemy piece?
                         legal_moves.append(
@@ -174,7 +165,7 @@ class Board:
         """
         x = pixel[0]
         y = pixel[1]
-        self.matrix[x][y].occupant = None
+        self.matrix[x][y] = None
 
     def move_piece(self, pixel_start, pixel_end):
         """
@@ -185,7 +176,7 @@ class Board:
         end_x = pixel_end[0]
         end_y = pixel_end[1]
 
-        self.matrix[end_x][end_y].occupant = self.matrix[start_x][start_y].occupant
+        self.matrix[end_x][end_y] = self.matrix[start_x][start_y]
         self.remove_piece((start_x, start_y))
 
         self.king((end_x, end_y))
@@ -246,8 +237,8 @@ class Board:
         """
         x = pixel[0]
         y = pixel[1]
-        if self.location((x, y)).occupant is not None:
-            if (
-                self.location((x, y)).occupant.color == Colors.BLUE.value and y == 0
-            ) or (self.location((x, y)).occupant.color == Colors.RED.value and y == 7):
-                self.location((x, y)).occupant.king = True
+        if self.location((x, y)) is not None:
+            if self.location((x, y)) == -1 and y == 0:  ### if blue change to king red
+                self.matrix[x][y] = -2
+            elif self.location((x, y)) == 1 and y == 7:  ### if red change to king blue
+                self.matrix[x][y] = 2

@@ -1,6 +1,6 @@
 import pygame
 
-from gui.consts import Colors
+from gui.consts import Colors, Models
 
 
 class Graphics:
@@ -47,9 +47,12 @@ class Graphics:
         """
         for x in range(8):
             for y in range(8):
+                color = Colors.BLACK.value
+                if (x + y) % 2 != 0:
+                    color = Colors.WHITE.value
                 pygame.draw.rect(
                     self.screen,
-                    board[x][y].color,
+                    color,
                     (
                         x * self.square_size,
                         y * self.square_size,
@@ -64,15 +67,19 @@ class Graphics:
         """
         for x in range(8):
             for y in range(8):
-                if board.matrix[x][y].occupant is not None:
+                if board.matrix[x][y] is not None:
+                    color = Colors.BLUE.value
+                    if board.matrix[x][y] in Models.RED.value:
+                        color = Colors.RED.value
+
                     pygame.draw.circle(
                         self.screen,
-                        board.matrix[x][y].occupant.color,
+                        color,
                         self.pixel_coords((x, y)),
                         self.piece_size,
                     )
 
-                    if board.location((x, y)).occupant.king is True:
+                    if board.location((x, y)) in Models.KING.value:
                         pygame.draw.circle(
                             self.screen,
                             Colors.GOLD.value,

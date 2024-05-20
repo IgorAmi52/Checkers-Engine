@@ -1,17 +1,9 @@
 import copy
-from gui.consts import Colors
+from gui.consts import Colors, Models
 from robot.minimax import minimax
 from robot.tree_node import TreeNode
 import logging
 import time
-
-
-logging.basicConfig(
-    filename="app.log",
-    level=logging.INFO,
-    filemode="w",
-    format="%(name)s - %(levelname)s - %(message)s",
-)
 
 
 class Robot:
@@ -35,10 +27,10 @@ class Robot:
         for x in range(8):
             for y in range(8):
                 if (x + y) % 2 == 0:
-                    checker = matrix[x][y].occupant
+                    checker = matrix[x][y]
                     if checker is None:
                         continue
-                    if checker.color != Colors.RED.value:
+                    if checker not in Models.RED.value:
                         continue
                     ### selected a red checker
 
@@ -50,7 +42,7 @@ class Robot:
 
     def create_children(self, tree, board, curr_pos, hop=False):
         for move in board.legal_moves(curr_pos, hop):
-            new_board = board
+            new_board = copy.deepcopy(board)
             new_board.move_piece(curr_pos, move)
             if move not in new_board.adjacent(curr_pos):
                 new_board.remove_piece(

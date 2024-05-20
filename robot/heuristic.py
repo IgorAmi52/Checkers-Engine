@@ -1,4 +1,4 @@
-from gui.consts import Colors
+from gui.consts import Colors, Models
 
 
 def get_heuristic(board):
@@ -9,18 +9,23 @@ def get_heuristic(board):
     for x in range(8):
         for y in range(8):
             if (x + y) % 2 == 0:
-                checker = matrix[x][y].occupant
+                checker = matrix[x][y]
                 if checker is None:
                     continue
-                color = checker.color
-                isKing = checker.king
+
+                color = "blue"
+                isKing = False
+                if checker not in Models.BLUE.value:
+                    color = "red"
+                if checker in Models.KING.value:
+                    isKing = True
 
                 if x != 0 and x != 7:
                     add_by_color(values, color, 1)
                 if isKing is True:
                     add_by_color(values, color, 10)
                     continue
-                if color == Colors.BLUE.value:
+                if color == "blue":
                     add_by_color(values, color, 7 - y)
                 else:
                     add_by_color(values, color, y)
@@ -30,6 +35,6 @@ def get_heuristic(board):
 
 def add_by_color(dict, color, value):
     sel_color = "blue"
-    if color == Colors.RED.value:
+    if color == "red":
         sel_color = "red"
     dict[sel_color] += value

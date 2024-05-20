@@ -4,7 +4,7 @@ import sys
 
 from gui.board import Board
 from gui.graphics import Graphics
-from gui.consts import Colors
+from gui.consts import Colors, Models
 from robot.robot import Robot
 
 pygame.font.init()
@@ -19,7 +19,7 @@ class Game:
         self.graphics = Graphics()
         self.board = Board()
         self.robot = Robot()
-        self.turn = Colors.BLUE.value
+        self.turn = Models.BLUE.value
         self.selected_piece = None  # a board location.
         self.hop = False
         self.selected_legal_moves = []
@@ -42,7 +42,7 @@ class Game:
         (like a mouse click) and then effect the game state.
         """
 
-        if self.turn == Colors.RED.value:  ### robots turn
+        if self.turn == Models.RED.value:  ### robots turn
             self.board = self.robot.move(self.board)
             self.end_turn()
             return
@@ -62,9 +62,8 @@ class Game:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if self.hop is False:
                     if (  ### click on the checker to move
-                        self.board.location(self.mouse_pos).occupant is not None
-                        and self.board.location(self.mouse_pos).occupant.color
-                        == self.turn
+                        self.board.location(self.mouse_pos) is not None
+                        and self.board.location(self.mouse_pos) in self.turn
                     ):
                         self.selected_piece = self.mouse_pos
 
@@ -85,6 +84,7 @@ class Game:
                                 )
                             )
                             self.hop = True
+                            print("Hopcina")
                             self.selected_piece = self.mouse_pos
 
                         else:
@@ -126,17 +126,17 @@ class Game:
         End the turn. Switches the current player.
         end_turn() also checks for and game and resets a lot of class attributes.
         """
-        if self.turn == Colors.BLUE.value:
-            self.turn = Colors.RED.value
+        if self.turn == Models.BLUE.value:
+            self.turn = Models.RED.value
         else:
-            self.turn = Colors.BLUE.value
+            self.turn = Models.BLUE.value
 
         self.selected_piece = None
         self.selected_legal_moves = []
         self.hop = False
 
         if self.check_for_endgame():
-            if self.turn == Colors.BLUE.value:
+            if self.turn == Models.BLUE.value:
                 self.graphics.draw_message("RED WINS!")
             else:
                 self.graphics.draw_message("BLUE WINS!")
@@ -148,9 +148,9 @@ class Game:
         for x in range(8):
             for y in range(8):
                 if (
-                    self.board.location((x, y)).color == Colors.BLACK.value
-                    and self.board.location((x, y)).occupant is not None
-                    and self.board.location((x, y)).occupant.color == self.turn
+                    (x + y) % 2 == 0
+                    and self.board.location((x, y)) is not None
+                    and self.board.location((x, y)) in self.turn
                 ):
                     if self.board.legal_moves((x, y)) != []:
                         return False
