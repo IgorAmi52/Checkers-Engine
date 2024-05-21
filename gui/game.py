@@ -4,7 +4,7 @@ import sys
 
 from gui.board import Board
 from gui.graphics import Graphics
-from gui.consts import Colors, Models
+from gui.consts import Models
 from robot.robot import Robot
 
 pygame.font.init()

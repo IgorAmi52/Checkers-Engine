@@ -1,6 +1,3 @@
-from robot.heuristic import get_heuristic
-
-
 class TreeNode:
     def __init__(self, value=None):
         self.value = value

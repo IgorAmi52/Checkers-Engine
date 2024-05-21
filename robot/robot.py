@@ -1,21 +1,34 @@
 import copy
-from gui.consts import Colors, Models
+from gui.consts import Models
 from robot.minimax import minimax
 from robot.tree_node import TreeNode
-import logging
-import time
 
 
 class Robot:
+    tree = None
+
     def move(self, board):
-        first = time.time()
-        tree = self.set_tree(TreeNode(board), 3)
-        logging.info("Time: " + str(time.time() - first))
+        depth = 0
+        if self.tree is None:
+            self.tree = TreeNode(board)
+            depth = 3
+        else:
+            self.tree = self.find_matching_board(self.tree.children, board)
+            depth = 2
 
-        best_node = minimax(tree, True)
-        return best_node.value
+        self.set_tree(self.tree, Models.RED.value, depth)
 
-    def set_tree(self, tree, depth):
+        self.tree = minimax(self.tree, True)
+
+        return self.tree.value
+
+    def set_tree(self, tree, turn, depth):
+        if tree is not None and tree.get_tree_depth() != 0:
+            turn = self.get_next_turn(turn)
+            for child in tree.children:
+                self.set_tree(child, turn, depth)
+            return
+
         if depth == 0:
             tree = None
             return
@@ -30,15 +43,16 @@ class Robot:
                     checker = matrix[x][y]
                     if checker is None:
                         continue
-                    if checker not in Models.RED.value:
+                    if checker not in turn:
                         continue
-                    ### selected a red checker
-
                     self.create_children(tree, tree.value, (x, y))
+        # for child in tree.children:
+        #     print_matrix(child.value.matrix)
+        #     print("\n")
 
-                    for child in tree.children:
-                        self.set_tree(child, depth - 1)
-        return tree
+        turn = self.get_next_turn(turn)
+        for child in tree.children:
+            self.set_tree(child, turn, depth - 1)
 
     def create_children(self, tree, board, curr_pos, hop=False):
         for move in board.legal_moves(curr_pos, hop):
@@ -53,6 +67,34 @@ class Robot:
                 )
                 if len(new_board.legal_moves(move, True)) != 0:  ### hop has more move
                     self.create_children(tree, new_board, move, True)
-                    return
             node = TreeNode(new_board)
             tree.children.append(node)
+
+    def find_matching_board(self, arr, board):
+        for item in arr:
+            if self.are_matrices_identical(item.value.matrix, board.matrix) is True:
+                return item
+        return None
+
+    def are_matrices_identical(self, matrix1, matrix2):
+        if len(matrix1) != len(matrix2) or len(matrix1[0]) != len(matrix2[0]):
+            return False
+        for i in range(len(matrix1)):
+            for j in range(len(matrix1[0])):
+                if matrix1[i][j] != matrix2[i][j]:
+                    return False
+        return True
+
+    def get_next_turn(self, turn):
+        if turn == Models.RED.value:
+            return Models.BLUE.value
+        return Models.RED.value
+
+
+def print_matrix(matrix):
+    for i in range(8):
+        row = ""
+        for y in range(8):
+            row += str(matrix[y][i]) + " "
+
+        print(row)

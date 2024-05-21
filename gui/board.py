@@ -1,4 +1,4 @@
-from gui.consts import Colors, Directions, Models
+from gui.consts import Directions, Models
 
 
 class Board:

@@ -1,5 +1,4 @@
 from robot.heuristic import get_heuristic
-from robot.tree_node import TreeNode
 
 
 def minimax(tree, is_start=False, maximizer=True):
