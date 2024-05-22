@@ -1,4 +1,4 @@
-from gui.consts import Colors, Models
+from resources.consts import Models
 
 
 def get_heuristic(board):
@@ -13,22 +13,22 @@ def get_heuristic(board):
                 if checker is None:
                     continue
 
-                color = "blue"
-                isKing = False
-                if checker not in Models.BLUE.value:
-                    color = "red"
+                points = 15
+                color = "red"
                 if checker in Models.KING.value:
-                    isKing = True
+                    points += 15
 
-                if x != 0 and x != 7:
-                    add_by_color(values, color, 1)
-                if isKing is True:
-                    add_by_color(values, color, 10)
-                    continue
-                if color == "blue":
-                    add_by_color(values, color, 7 - y)
+                elif checker in Models.BLUE.value:
+                    color = "blue"
+                    if y == 7:
+                        points += 5
+                    points += 7 - y
                 else:
-                    add_by_color(values, color, y)
+                    if y == 0:
+                        points += 5
+                    points += y
+                points += x_proximity_value(x)
+                add_by_color(values, color, points)
 
     return values["red"] - values["blue"]
 
@@ -38,3 +38,9 @@ def add_by_color(dict, color, value):
     if color == "red":
         sel_color = "red"
     dict[sel_color] += value
+
+
+def x_proximity_value(param):  ### the closer to middle the bigget value
+    proximity_map = {0: 1, 1: 2, 2: 3, 3: 4, 4: 4, 5: 3, 6: 2, 7: 1}
+
+    return proximity_map[param]

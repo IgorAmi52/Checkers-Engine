@@ -4,7 +4,7 @@ import sys
 
 from gui.board import Board
 from gui.graphics import Graphics
-from gui.consts import Models
+from resources.consts import Models
 from robot.robot import Robot
 
 pygame.font.init()
@@ -42,7 +42,9 @@ class Game:
         (like a mouse click) and then effect the game state.
         """
 
-        if self.turn == Models.RED.value:  ### robots turn
+        if self.turn == Models.RED.value and not Board.check_for_endgame(
+            self.board, self.turn
+        ):  ### robots turn
             self.board = self.robot.move(self.board)
             self.end_turn()
             return
@@ -84,7 +86,6 @@ class Game:
                                 )
                             )
                             self.hop = True
-                            print("Hopcina")
                             self.selected_piece = self.mouse_pos
 
                         else:
@@ -134,7 +135,6 @@ class Game:
         self.selected_piece = None
         self.selected_legal_moves = []
         self.hop = False
-
         if Board.check_for_endgame(self.board, self.turn):
             if self.turn == Models.BLUE.value:
                 self.graphics.draw_message("RED WINS!")

@@ -1,4 +1,4 @@
-from gui.consts import Directions, Models
+from resources.consts import Directions, Models
 
 
 class Board:
@@ -278,3 +278,13 @@ class Board:
         if turn == Models.RED.value:
             return Models.BLUE.value
         return Models.RED.value
+
+    def get_piece_count(board):
+        matrix = board.matrix
+        count = 0
+
+        for x in range(8):
+            for y in range(8):
+                if matrix[x][y] is not None:
+                    count += 1
+        return count

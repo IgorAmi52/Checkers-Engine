@@ -21,3 +21,16 @@ class TreeNode:
 
     def set_heuristic(self, value):
         self.heuristic = value
+
+    def clean_heuristic(self):
+        self.heuristic = None
+        for child in self.children:
+            child.clean_heuristic()
+
+    def visualize_tree(self, level=0):
+        # Print the current node's value and heuristic
+        print(" " * (level * 4) + f"LVL:{level},Value: {self.heuristic}")
+
+        # Recursively print all children
+        for child in self.children:
+            child.visualize_tree(level + 1)

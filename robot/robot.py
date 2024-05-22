@@ -1,5 +1,5 @@
 import copy
-from gui.consts import Models
+from resources.consts import Models
 from robot.minimax import minimax
 from robot.tree_node import TreeNode
 from gui.board import Board
@@ -7,6 +7,7 @@ from gui.board import Board
 
 class Robot:
     tree = None
+    is_deep = False
 
     def move(self, board):
         depth = 0
@@ -15,15 +16,31 @@ class Robot:
             depth = 4
         else:
             self.tree = Board.find_matching_board(self.tree.children, board)
-            depth = 2
+
+            piece_count = Board.get_piece_count(self.tree.value)
+
+            if piece_count < 4 and not self.is_deep:
+                depth = 3
+                self.is_deep = True
+            else:
+                depth = 2
 
         self.set_tree(self.tree, Models.RED.value, depth)
 
         self.tree = minimax(self.tree, True)
-
+        self.tree.visualize_tree()
+        self.tree.clean_heuristic()
+        print("gotova jedna tura")
         return self.tree.value
 
     def set_tree(self, tree, turn, depth):
+        if Board.check_for_endgame(tree.value, turn):  ### check if game is over
+            if turn == Models.RED.value:
+                tree.heuristic = float("-inf")
+            else:
+                tree.heuristic = float("inf")
+            return
+
         if tree is not None and tree.get_tree_depth() != 0:
             turn = Board.get_next_turn(turn)
             for child in tree.children:
@@ -67,9 +84,3 @@ class Robot:
                     self.create_children(tree, new_board, move, True)
             node = TreeNode(new_board)
             tree.children.append(node)
-
-    def find_matching_board(self, arr, board):
-        for item in arr:
-            if self.are_matrices_identical(item.value.matrix, board.matrix) is True:
-                return item
-        return None

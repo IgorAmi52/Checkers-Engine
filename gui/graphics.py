@@ -1,6 +1,6 @@
 import pygame
 
-from gui.consts import Colors, Models
+from resources.consts import Colors, Models
 
 
 class Graphics:
