@@ -242,3 +242,39 @@ class Board:
                 self.matrix[x][y] = -2
             elif self.location((x, y)) == 1 and y == 7:  ### if red change to king blue
                 self.matrix[x][y] = 2
+
+    def find_matching_board(arr, board):
+        for item in arr:
+            if Board.are_matrices_identical(item.value.matrix, board.matrix) is True:
+                return item
+        return None
+
+    def are_matrices_identical(matrix1, matrix2):
+        if len(matrix1) != len(matrix2) or len(matrix1[0]) != len(matrix2[0]):
+            return False
+        for i in range(len(matrix1)):
+            for j in range(len(matrix1[0])):
+                if matrix1[i][j] != matrix2[i][j]:
+                    return False
+        return True
+
+    def check_for_endgame(board, turn):
+        """
+        Checks to see if a player has run out of moves or pieces. If so, then return True. Else return False.
+        """
+        for x in range(8):
+            for y in range(8):
+                if (
+                    (x + y) % 2 == 0
+                    and board.location((x, y)) is not None
+                    and board.location((x, y)) in turn
+                ):
+                    if board.legal_moves((x, y)) != []:
+                        return False
+
+        return True
+
+    def get_next_turn(turn):
+        if turn == Models.RED.value:
+            return Models.BLUE.value
+        return Models.RED.value

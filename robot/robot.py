@@ -2,6 +2,7 @@ import copy
 from gui.consts import Models
 from robot.minimax import minimax
 from robot.tree_node import TreeNode
+from gui.board import Board
 
 
 class Robot:
@@ -11,9 +12,9 @@ class Robot:
         depth = 0
         if self.tree is None:
             self.tree = TreeNode(board)
-            depth = 3
+            depth = 4
         else:
-            self.tree = self.find_matching_board(self.tree.children, board)
+            self.tree = Board.find_matching_board(self.tree.children, board)
             depth = 2
 
         self.set_tree(self.tree, Models.RED.value, depth)
@@ -24,7 +25,7 @@ class Robot:
 
     def set_tree(self, tree, turn, depth):
         if tree is not None and tree.get_tree_depth() != 0:
-            turn = self.get_next_turn(turn)
+            turn = Board.get_next_turn(turn)
             for child in tree.children:
                 self.set_tree(child, turn, depth)
             return
@@ -46,11 +47,8 @@ class Robot:
                     if checker not in turn:
                         continue
                     self.create_children(tree, tree.value, (x, y))
-        # for child in tree.children:
-        #     print_matrix(child.value.matrix)
-        #     print("\n")
 
-        turn = self.get_next_turn(turn)
+        turn = Board.get_next_turn(turn)
         for child in tree.children:
             self.set_tree(child, turn, depth - 1)
 
@@ -75,26 +73,3 @@ class Robot:
             if self.are_matrices_identical(item.value.matrix, board.matrix) is True:
                 return item
         return None
-
-    def are_matrices_identical(self, matrix1, matrix2):
-        if len(matrix1) != len(matrix2) or len(matrix1[0]) != len(matrix2[0]):
-            return False
-        for i in range(len(matrix1)):
-            for j in range(len(matrix1[0])):
-                if matrix1[i][j] != matrix2[i][j]:
-                    return False
-        return True
-
-    def get_next_turn(self, turn):
-        if turn == Models.RED.value:
-            return Models.BLUE.value
-        return Models.RED.value
-
-
-def print_matrix(matrix):
-    for i in range(8):
-        row = ""
-        for y in range(8):
-            row += str(matrix[y][i]) + " "
-
-        print(row)

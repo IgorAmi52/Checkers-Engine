@@ -135,24 +135,8 @@ class Game:
         self.selected_legal_moves = []
         self.hop = False
 
-        if self.check_for_endgame():
+        if Board.check_for_endgame(self.board, self.turn):
             if self.turn == Models.BLUE.value:
                 self.graphics.draw_message("RED WINS!")
             else:
                 self.graphics.draw_message("BLUE WINS!")
-
-    def check_for_endgame(self):
-        """
-        Checks to see if a player has run out of moves or pieces. If so, then return True. Else return False.
-        """
-        for x in range(8):
-            for y in range(8):
-                if (
-                    (x + y) % 2 == 0
-                    and self.board.location((x, y)) is not None
-                    and self.board.location((x, y)) in self.turn
-                ):
-                    if self.board.legal_moves((x, y)) != []:
-                        return False
-
-        return True
