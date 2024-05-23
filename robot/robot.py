@@ -28,9 +28,9 @@ class Robot:
         self.set_tree(self.tree, Models.RED.value, depth)
 
         self.tree = minimax(self.tree, True)
-        self.tree.visualize_tree()
+        ###  self.tree.visualize_tree()
         self.tree.clean_heuristic()
-        print("gotova jedna tura")
+        ###    print("gotova jedna tura")
         return self.tree.value
 
     def set_tree(self, tree, turn, depth):
