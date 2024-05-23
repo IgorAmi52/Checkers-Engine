@@ -44,4 +44,4 @@ def get_heuristic(board):
                 points += len(board.legal_moves((x, y))) * 2
                 add_by_color(values, color, points)
 
-    return values["blue"] - values["red"]
+    return values["red"] - values["blue"]

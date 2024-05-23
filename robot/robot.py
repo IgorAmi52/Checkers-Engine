@@ -25,7 +25,7 @@ class Robot:
             else:
                 depth = 2
 
-        self.set_tree(self.tree, Models.BLUE.value, depth)
+        self.set_tree(self.tree, Models.RED.value, depth)
 
         self.tree = minimax(self.tree, True)
         self.tree.clean_heuristic()
@@ -33,7 +33,7 @@ class Robot:
 
     def set_tree(self, tree, turn, depth):
         if Board.check_for_endgame(tree.value, turn):  ### check if game is over
-            if turn == Models.BLUE.value:
+            if turn == Models.RED.value:
                 tree.heuristic = float("-inf")
             else:
                 tree.heuristic = float("inf")
