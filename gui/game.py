@@ -42,7 +42,7 @@ class Game:
         (like a mouse click) and then effect the game state.
         """
 
-        if self.turn == Models.RED.value and not Board.check_for_endgame(
+        if self.turn == Models.BLUE.value and not Board.check_for_endgame(
             self.board, self.turn
         ):  ### robots turn
             self.board = self.robot.move(self.board)

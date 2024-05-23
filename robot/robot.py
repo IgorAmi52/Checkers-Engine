@@ -19,23 +19,21 @@ class Robot:
 
             piece_count = Board.get_piece_count(self.tree.value)
 
-            if piece_count < 4 and not self.is_deep:
+            if piece_count < 7 and not self.is_deep:
                 depth = 3
                 self.is_deep = True
             else:
                 depth = 2
 
-        self.set_tree(self.tree, Models.RED.value, depth)
+        self.set_tree(self.tree, Models.BLUE.value, depth)
 
         self.tree = minimax(self.tree, True)
-        ###  self.tree.visualize_tree()
         self.tree.clean_heuristic()
-        ###    print("gotova jedna tura")
         return self.tree.value
 
     def set_tree(self, tree, turn, depth):
         if Board.check_for_endgame(tree.value, turn):  ### check if game is over
-            if turn == Models.RED.value:
+            if turn == Models.BLUE.value:
                 tree.heuristic = float("-inf")
             else:
                 tree.heuristic = float("inf")

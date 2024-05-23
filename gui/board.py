@@ -288,3 +288,12 @@ class Board:
                 if matrix[x][y] is not None:
                     count += 1
         return count
+
+    def get_moves_count(board, turn):
+        matrix = board.matrix
+        count = 0
+        for x in range(8):
+            for y in range(8):
+                if matrix[x][y] is not None and matrix[x][y] in turn:
+                    count += len(board.legal_moves())
+        return count
