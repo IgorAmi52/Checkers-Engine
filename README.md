@@ -61,7 +61,7 @@ If you are using Conda to manage your environment, follow these steps:
 
 - **Run the Project**: To start the Checkers Engine, run the following command in your terminal:
    ```bash
-   python checkers_engine.py
+   python main.py
 - **Try to beat it :)**: Once the script is running, a GUI will open displaying the Checkers board. You can interact with the game by clicking on the board to make moves.
 
 - **Customizing the AI**: To adjust the AI's behavior, modify the heuristic function in the code. The heuristic is responsible for evaluating the board state and guiding the AI's decision-making process. You can experiment with different strategies by changing this function.
