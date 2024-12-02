@@ -48,7 +48,7 @@ If you are using Conda to manage your environment, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/checkers-engine.git
+   git clone https://github.com/IgorAmi52/Checkers-Engine.git
 2. Navigate to the project directory:
    ```bash
    cd checkers-engine
