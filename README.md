@@ -19,7 +19,7 @@ This is an open-source Checkers engine built using the Min-Max algorithm for dec
 
 The Checkers Engine is designed to simulate the classic game of Checkers. It uses the Min-Max algorithm with a tree structure to evaluate the best possible moves for the AI. The behavior of the AI is driven by a customizable heuristic function that assesses the board state, allowing users to fine-tune the AI's decision-making.
 
-This project also includes a GUI, enabling users to interact with the game visually. The game features real-time updates and an intuitive interface for a smooth user experience.
+This project also includes a GUI, enabling users to interact with the game visually.
 
 ---
 
@@ -35,7 +35,7 @@ This project also includes a GUI, enabling users to interact with the game visua
 
 - **Programming Language**: Python
 - **GUI Framework**: Pygame
-- **Algorithm**: Min-Max with a tree structure for decision-making
+- **Algorithm**: Min-Max algorithm
 
 ---
 
