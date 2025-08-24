@@ -1,6 +1,6 @@
 # Checkers Engine
 
-This is an open-source Checkers engine built using the Min-Max algorithm for decision making. The project was developed as part of an algorithm and data structures course in my first year of studies.
+This is an open-source Checkers engine built using the Min-Max algorithm for decision making.
 
 ---
 
